@@ -31,8 +31,22 @@ $ python htcap.py crawl http://0day5.com
 
 使用姿势和原本的一样的
 
-```
-
+```bash
+$ python htcap.py crawl http://testphp.vulnweb.com/
+*****************************************************
+* / _ \|  _ \  / \ \ / / ___/ ___|  ___ __ _| \ | | *
+*| | | | | | |/ _ \ V /|___ \___ \ / __/ _` |  \| | *
+*| |_| | |_| / ___ \| |  ___) |__) | (_| (_| | |\  |*
+* \___/|____/_/   \_\_| |____/____/ \___\__,_|_| \_|*
+*****************************************************
+. No handlers could be found for logger "tldextract"
+[*][debug] http://testphp.vulnweb.com/pictures/
+[*][debug] http://testphp.vulnweb.com/images/
+[*][debug] http://testphp.vulnweb.com/bxss/
+[*][debug] http://testphp.vulnweb.com/Connections/
+[*][debug] http://testphp.vulnweb.com/admin/
+[*][debug] http://testphp.vulnweb.com/CVS/
+[*][debug] http://testphp.vulnweb.com/secured/
 ```
 
 PhantomJs can be downloaded [here](http://phantomjs.org//download.html). It comes as a self-contained executable with all libraries linked statically, so there is no need to install or compile anything else.  
