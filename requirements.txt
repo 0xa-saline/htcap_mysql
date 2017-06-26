@@ -1,0 +1,6 @@
+DBUtils
+pymysql
+HTMLParser
+requests
+requests_cache
+tld
