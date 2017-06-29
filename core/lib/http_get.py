@@ -38,25 +38,6 @@ from core.lib.request import Request
 from core.lib.utils import *
 from core.constants import *
 
-_dnscache={}  
-def _setDNSCache():  
-    """ 
-    Makes a cached version of socket._getaddrinfo to avoid subsequent DNS requests. 
-    """  
-  
-    def _getaddrinfo(*args, **kwargs):  
-        global _dnscache  
-        if args in _dnscache: 
-            return _dnscache[args]  
-  
-        else: 
-            _dnscache[args] = socket._getaddrinfo(*args, **kwargs)  
-            return _dnscache[args]  
-  
-    if not hasattr(socket, '_getaddrinfo'):  
-        socket._getaddrinfo = socket.getaddrinfo  
-        socket.getaddrinfo = _getaddrinfo
-
 class HttpGet:
 
 	def __init__(self, request, timeout, retries=None, useragent=None, proxy=None):
@@ -66,7 +47,6 @@ class HttpGet:
 		self.proxy = proxy
 		self.retries_interval = 0.5
 		self.useragent = useragent
-		_dnscache={}
 
 	def urllib2_opener(self, request, jar_response, follow_redirect = None):
 		url = request.url
