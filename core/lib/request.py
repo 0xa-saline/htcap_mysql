@@ -73,12 +73,12 @@ class Request(object):
 		Socket_connect = socket.socket.connect
 		Socket_connect_ex = socket.socket.connect_ex
 
-		socket.socket.connect = lambda *args, **kwargs: apply(self._connect,
-                                                              (self, Socket_connect) + (args,),
-                                                              kwargs)
-		socket.socket.connect_ex = lambda *args, **kwargs: apply(self._connect,
-                                                                 (self, Socket_connect_ex) + (args,),
-                                                                 kwargs)
+		#socket.socket.connect = lambda *args, **kwargs: apply(self._connect,
+                #                                              (self, Socket_connect) + (args,),
+                #                                              kwargs)
+		#socket.socket.connect_ex = lambda *args, **kwargs: apply(self._connect,
+                #                                                 (self, Socket_connect_ex) + (args,),
+                #                                                 kwargs)
 
 		url = url.strip()
 
