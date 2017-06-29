@@ -9,14 +9,54 @@ the terms of the GNU General Public License as published by the Free Software
 Foundation; either version 2 of the License, or (at your option) any later 
 version.
 """
-
+import socket,time
 from urlparse import urljoin
 from core.lib.cookie import Cookie
 from core.lib.utils import *
 import json 
 from core.lib.thirdparty.simhash import Simhash
 
+
+_dnscache={}  
+def _setDNSCache():  
+    """ 
+    Makes a cached version of socket._getaddrinfo to avoid subsequent DNS requests. 
+    """  
+  
+    def _getaddrinfo(*args, **kwargs):  
+        global _dnscache  
+        if args in _dnscache: 
+            return _dnscache[args]  
+  
+        else: 
+            _dnscache[args] = socket._getaddrinfo(*args, **kwargs)  
+            return _dnscache[args]  
+  
+    if not hasattr(socket, '_getaddrinfo'):  
+        socket._getaddrinfo = socket.getaddrinfo  
+        socket.getaddrinfo = _getaddrinfo
+
 class Request(object):
+	@staticmethod
+	def _connect(*args, **kwargs):
+		self, realfun, args = args
+
+		timeout = args[0].gettimeout()
+		if (timeout == None or timeout != 0) and self._speed > 0:
+			while True:
+				begin = time.time()
+				nowtime = max(0.01, begin - self.__ts)
+				if nowtime > 5:
+					self.__conn = 0
+					self.__ts = begin
+					break
+				if self.__conn / nowtime <= self._speed:
+					break
+				else:
+					time.sleep(0.1)
+			self.__conn += 1
+
+		return apply(realfun, args, kwargs)
 
 	def __init__(self, type, method, url, parent = None, referer = None, data = None, trigger=None, json_cookies = None, set_cookie = None, http_auth=None, db_id = None, parent_db_id = None, out_of_scope = None):
 		self.type = type
@@ -24,6 +64,22 @@ class Request(object):
 		self._html = None
 		self._html_hash = None
 		self.user_output = []
+		
+		self._speed   = 5
+		self.__conn = 0
+		self.__ts = time.time()
+		_dnscache={}
+
+		Socket_connect = socket.socket.connect
+		Socket_connect_ex = socket.socket.connect_ex
+
+		socket.socket.connect = lambda *args, **kwargs: apply(self._connect,
+                                                              (self, Socket_connect) + (args,),
+                                                              kwargs)
+		socket.socket.connect_ex = lambda *args, **kwargs: apply(self._connect,
+                                                                 (self, Socket_connect_ex) + (args,),
+                                                                 kwargs)
+
 		url = url.strip()
 
 		try:
