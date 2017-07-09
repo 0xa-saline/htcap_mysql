@@ -38,7 +38,7 @@ from lib.crawl_result import *
 from core.lib.request import Request
 from core.lib.http_get import HttpGet
 from core.lib.shell import CommandExecutor
-from core.dirburp.dirscan import Dirbuster
+#from core.dirburp.dirscan import Dirbuster
 from crawler_thread import CrawlerThread
 
 from core.lib.utils import *
